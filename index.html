@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Health & Wellness News</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes gentlePulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f9faf7 0%, #f0f4ee 30%, #faf8f5 60%, #f5f8f6 100%);
+            font-family: 'DM Sans', sans-serif;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #b7c4b8; border-radius: 3px; }
+        
+        header {
+            padding: 48px 24px 28px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #A41034, #2d6a4f, #009CDE, #D4A574, #5B4FCF, #9B2C6E, #E15C2E);
+            background-size: 200% 100%;
+            animation: shimmer 8s linear infinite;
+        }
+        
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            padding: 6px 16px;
+            border-radius: 24px;
+            font-size: 11px;
+            color: #52b788;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid #d8f3dc;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        
+        .pulse-dot {
+            animation: gentlePulse 2s ease-in-out infinite;
+        }
+        
+        h1 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(32px, 5.5vw, 52px);
+            font-weight: 400;
+            color: #1b4332;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+        
+        h1 span {
+            font-style: italic;
+            color: #2d6a4f;
+        }
+        
+        .subtitle {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(14px, 2vw, 17px);
+            color: #74796d;
+            margin: 0 auto 12px;
+            line-height: 1.5;
+            font-style: italic;
+            max-width: 500px;
+        }
+        
+        .date-info {
+            font-size: 14px;
+            color: #74796d;
+            margin: 0 auto 4px;
+        }
+        
+        .update-info {
+            font-size: 12px;
+            color: #a3a89b;
+            margin-bottom: 16px;
+        }
+        
+        .source-ticker {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeSlideUp 0.6s ease-out both;
+        }
+        
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 14px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        
+        .source-badge-icon {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6px;
+            font-weight: 800;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 20px 16px 32px;
+            animation: fadeSlideUp 0.5s ease-out 0.1s both;
+        }
+        
+        .category-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 7px 14px;
+            border-radius: 24px;
+            border: 1px solid #d4dbd6;
+            background: #fff;
+            color: #5a6350;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .category-btn.active {
+            font-weight: 700;
+            border-color: #2d6a4f;
+            background: #2d6a4f;
+            color: #fff;
+        }
+        
+        .category-btn:hover:not(.active) {
+            border-color: #52b788;
+            color: #2d6a4f;
+        }
+        
+        .category-count {
+            font-size: 9px;
+            opacity: 0.8;
+            padding: 1px 5px;
+            border-radius: 10px;
+        }
+        
+        .category-btn.active .category-count {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .category-btn:not(.active) .category-count {
+            background: #f0faf4;
+        }
+        
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px 64px;
+        }
+        
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            gap: 28px;
+        }
+        
+        .spinner-container {
+            position: relative;
+            width: 96px;
+            height: 96px;
+        }
+        
+        .spinner-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+        
+        .spinner-ring-1 { inset: 0; border-top-color: #A41034; animation: spin 1s linear infinite; }
+        .spinner-ring-2 { inset: 8px; border-top-color: #2d6a4f; animation: spin 1.5s linear infinite reverse; }
+        .spinner-ring-3 { inset: 16px; border-top-color: #009CDE; animation: spin 2s linear infinite; }
+        .spinner-ring-4 { inset: 24px; border-top-color: #D4A574; animation: spin 2.5s linear infinite reverse; }
+        
+        .spinner-icon {
+            position: absolute;
+            inset: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        .loading-text {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 22px;
+            color: #1b4332;
+            letter-spacing: -0.02em;
+        }
+        
+        .loading-source {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            color: #52b788;
+            margin-top: 8px;
+            font-weight: 600;
+            animation: fadeSlideUp 0.3s ease-out;
+        }
+        
+        .progress-bar {
+            width: 260px;
+            height: 5px;
+            background: #e8ece9;
+            border-radius: 3px;
+            margin: 14px auto 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2d6a4f, #52b788, #D4A574);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-count {
+            font-size: 11px;
+            color: #a3a89b;
+            margin-top: 6px;
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
+            gap: 20px;
+        }
+        
+        .article-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e8ece9;
+            transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-card.featured {
+            background: linear-gradient(135deg, #fdf8f4 0%, #f0faf4 50%, #faf5f0 100%);
+            padding: 32px;
+            border: 2px solid #52b788;
+            grid-column: 1 / -1;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(45,106,79,0.12);
+        }
+        
+        .article-top-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #2d6a4f, #3d8b6a);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        
+        .article-date {
+            font-size: 11px;
+            color: #8a8f82;
+        }
+        
+        .article-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 19px;
+            font-weight: 400;
+            color: #1b4332;
+            margin: 0 0 10px;
+            line-height: 1.35;
+            letter-spacing: -0.02em;
+        }
+        
+        .article-card.featured .article-title {
+            font-size: 26px;
+        }
+        
+        .article-summary {
+            font-size: 14px;
+            color: #5a6350;
+            line-height: 1.65;
+            margin: 0;
+        }
+        
+        .article-source {
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        
+        .source-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        
+        .refresh-container {
+            text-align: center;
+            margin-top: 48px;
+            animation: fadeSlideUp 0.5s ease-out 0.3s both;
+        }
+        
+        .refresh-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 14px 36px;
+            background: transparent;
+            color: #2d6a4f;
+            border: 2px solid #2d6a4f;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            background: #2d6a4f;
+            color: #fff;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 28px 24px;
+            border-top: 1px solid #e0e6e2;
+            background: #f7faf8;
+        }
+        
+        footer p {
+            font-size: 11px;
+            color: #8a8f82;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+        
+        footer p:last-child {
+            color: #a3a89b;
+            margin-bottom: 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #74796d;
+        }
+        
+        .empty-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+        
+        .empty-text {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 20px;
+            color: #1b4332;
+        }
+        
+        .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 40vh;
+            gap: 20px;
+            padding: 40px;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+        }
+        
+        .error-text {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 20px;
+            color: #1b4332;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .error-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            padding: 12px 32px;
+            background: #2d6a4f;
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .error-btn:hover {
+            background: #1b4332;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-gradient"></div>
+        
+        <div class="live-badge">
+            <span class="pulse-dot">◉</span> Live from <span id="sourceCount">19</span> Trusted Sources
+        </div>
+        
+        <h1>Daily Health <span>&</span> Wellness</h1>
+        
+        <p class="subtitle">Mind · Body · Longevity · Beauty · Holistic Living</p>
+        
+        <p class="date-info" id="dateInfo"></p>
+        
+        <p class="update-info hidden" id="updateInfo"></p>
+        
+        <div class="source-ticker hidden" id="sourceTicker"></div>
+    </header>
+    
+    <nav id="categoryNav" class="hidden"></nav>
+    
+    <main>
+        <div id="loadingContainer" class="loading-container">
+            <div class="spinner-container">
+                <div class="spinner-ring spinner-ring-1"></div>
+                <div class="spinner-ring spinner-ring-2"></div>
+                <div class="spinner-ring spinner-ring-3"></div>
+                <div class="spinner-ring spinner-ring-4"></div>
+                <div class="spinner-icon">🌿</div>
+            </div>
+            <div style="text-align: center;">
+                <p class="loading-text">Curating wellness insights...</p>
+                <p class="loading-source hidden" id="currentSource"></p>
+                <div class="progress-bar hidden" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-count hidden" id="progressCount"></p>
+            </div>
+        </div>
+        
+        <div id="errorContainer" class="error-state hidden">
+            <div class="error-icon">🍃</div>
+            <p class="error-text" id="errorMessage"></p>
+            <button class="error-btn" onclick="fetchNews()">Try Again</button>
+        </div>
+        
+        <div id="articlesContainer" class="hidden"></div>
+        
+        <div id="refreshContainer" class="refresh-container hidden">
+            <button class="refresh-btn" onclick="fetchNews()">
+                🔄 Refresh News
+            </button>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Sources: Harvard Medical · WHO · Mayo Clinic · NIH · Johns Hopkins · The Lancet · CDC · Nature Medicine · Stanford · Cleveland Clinic</p>
+        <p>Psychology Today · Sleep Foundation · Dermatology Times · WebMD · Healthline · Well+Good · Mindbodygreen · Wired</p>
+        <p>Powered by Claude AI · Real-time web search · Auto-curated daily</p>
+    </footer>
+
+    <script>
+        const CATEGORIES = [
+            { id: "all", label: "All", icon: "✨" },
+            { id: "nutrition", label: "Nutrition", icon: "🥗" },
+            { id: "mental", label: "Mental Health", icon: "🧠" },
+            { id: "fitness", label: "Fitness", icon: "💪" },
+            { id: "medical", label: "Medical", icon: "🏥" },
+            { id: "longevity", label: "Longevity", icon: "⏳" },
+            { id: "sleep", label: "Sleep", icon: "🌙" },
+            { id: "skincare", label: "Skin & Beauty", icon: "🌸" },
+            { id: "womens", label: "Women's Health", icon: "♀️" },
+            { id: "holistic", label: "Holistic", icon: "🧘" },
+            { id: "welltech", label: "Wellness Tech", icon: "⌚" },
+        ];
+
+        const SOURCES = [
+            { name: "Harvard Medical", color: "#A41034", abbr: "HMS" },
+            { name: "Harvard Health", color: "#A41034", abbr: "HHP" },
+            { name: "WHO", color: "#009CDE", abbr: "WHO" },
+            { name: "Mayo Clinic", color: "#0057B8", abbr: "MAYO" },
+            { name: "NIH", color: "#20558A", abbr: "NIH" },
+            { name: "The Lancet", color: "#01254C", abbr: "LAN" },
+            { name: "Johns Hopkins", color: "#002D72", abbr: "JHU" },
+            { name: "CDC", color: "#075290", abbr: "CDC" },
+            { name: "Nature Medicine", color: "#E15C2E", abbr: "NAT" },
+            { name: "Stanford Medicine", color: "#8C1515", abbr: "SU" },
+            { name: "Cleveland Clinic", color: "#006747", abbr: "CC" },
+            { name: "Psychology Today", color: "#0078D4", abbr: "PT" },
+            { name: "Mindbodygreen", color: "#4A7C59", abbr: "MBG" },
+            { name: "WebMD", color: "#E3342F", abbr: "WMD" },
+            { name: "Healthline", color: "#0072CE", abbr: "HL" },
+            { name: "Sleep Foundation", color: "#2C3E6B", abbr: "SF" },
+            { name: "Dermatology Times", color: "#B85C38", abbr: "DT" },
+            { name: "Well+Good", color: "#D4A574", abbr: "W+G" },
+            { name: "Wired", color: "#000000", abbr: "WRD" },
+        ];
+
+        const SEARCHES = [
+            { query: "Harvard Health Publishing wellness research news 2025", label: "Harvard Health" },
+            { query: "WHO World Health Organization latest health advisory 2025", label: "WHO" },
+            { query: "Mayo Clinic health wellness tips research news", label: "Mayo Clinic" },
+            { query: "NIH National Institutes Health breakthrough research 2025", label: "NIH" },
+            { query: "Johns Hopkins Medicine health study findings 2025", label: "Johns Hopkins" },
+            { query: "The Lancet new medical research published 2025", label: "The Lancet" },
+            { query: "CDC health advisory wellness update 2025", label: "CDC" },
+            { query: "Stanford Medicine health research news today", label: "Stanford Medicine" },
+            { query: "Cleveland Clinic wellness health tips research 2025", label: "Cleveland Clinic" },
+            { query: "Nature Medicine latest health longevity research 2025", label: "Nature Medicine" },
+            { query: "Psychology Today mental health anxiety stress research 2025", label: "Psychology Today" },
+            { query: "sleep science insomnia circadian rhythm research news 2025", label: "Sleep Science" },
+            { query: "dermatology skincare anti-aging collagen research news 2025", label: "Skincare Research" },
+            { query: "women's health menopause fertility hormones research news 2025", label: "Women's Health" },
+            { query: "meditation yoga holistic wellness ayurveda research 2025", label: "Holistic Wellness" },
+            { query: "wearable health technology fitness tracker digital health news 2025", label: "Wellness Tech" },
+            { query: "gut microbiome nutrition probiotics diet research news 2025", label: "Gut Health" },
+            { query: "longevity blue zones anti-aging healthspan research 2025", label: "Longevity Research" },
+            { query: "exercise fitness muscle strength training research news 2025", label: "Fitness Science" },
+            { query: "mindfulness self-care burnout prevention wellbeing tips 2025", label: "Self-Care & Wellbeing" },
+        ];
+
+        const CAT_COLORS = {
+            nutrition: "#2d6a4f",
+            mental: "#5B4FCF",
+            fitness: "#C0392B",
+            medical: "#20558A",
+            longevity: "#8B6914",
+            sleep: "#2C3E6B",
+            skincare: "#B85C38",
+            womens: "#9B2C6E",
+            holistic: "#4A7C59",
+            welltech: "#1A73E8",
+        };
+
+        let articles = [];
+        let activeCategory = "all";
+        let lastUpdated = null;
+
+        function getSourceBadge(sourceName) {
+            if (!sourceName) return null;
+            const lower = sourceName.toLowerCase();
+            
+            for (const s of SOURCES) {
+                if (lower.includes(s.name.toLowerCase()) || lower.includes(s.abbr.toLowerCase())) {
+                    return s;
+                }
+            }
+            
+            if (lower.includes("harvard")) return SOURCES[0];
+            if (lower.includes("who") || lower.includes("world health")) return SOURCES[2];
+            if (lower.includes("mayo")) return SOURCES[3];
+            if (lower.includes("nih")) return SOURCES[4];
+            if (lower.includes("lancet")) return SOURCES[5];
+            if (lower.includes("johns hopkins") || lower.includes("hopkins")) return SOURCES[6];
+            if (lower.includes("cdc")) return SOURCES[7];
+            if (lower.includes("nature")) return SOURCES[8];
+            if (lower.includes("stanford")) return SOURCES[9];
+            if (lower.includes("cleveland")) return SOURCES[10];
+            if (lower.includes("psychology today")) return SOURCES[11];
+            if (lower.includes("mindbodygreen")) return SOURCES[12];
+            if (lower.includes("webmd")) return SOURCES[13];
+            if (lower.includes("healthline")) return SOURCES[14];
+            if (lower.includes("sleep foundation")) return SOURCES[15];
+            if (lower.includes("dermatology")) return SOURCES[16];
+            if (lower.includes("well+good")) return SOURCES[17];
+            if (lower.includes("wired")) return SOURCES[18];
+            
+            return null;
+        }
+
+        function classifyArticle(title, summary) {
+            const text = `${title} ${summary}`.toLowerCase();
+            
+            if (/sleep|insomnia|circadian|melatonin|rest|nap|dreaming|snoring|sleep.?apnea/.test(text)) return "sleep";
+            if (/skin|beauty|dermat|acne|wrinkle|sunscreen|moistur|collagen|retinol|glow|complexion|anti.?aging skin/.test(text)) return "skincare";
+            if (/women|female|menopaus|pregnan|fertility|maternal|ovarian|breast cancer|pcos|endometri|menstrua|hormone.?therap/.test(text)) return "womens";
+            if (/holistic|ayurved|meditation|yoga|mindful|acupuncture|herbal|alternative|integrative|chakra|reiki|traditional.?medicine|tcm|naturopath/.test(text)) return "holistic";
+            if (/wearable|health.?tech|fitness.?track|smart.?watch|health.?app|digital.?health|telehealth|ai.?health|biotrack|oura|whoop|apple.?health/.test(text)) return "welltech";
+            if (/nutrition|diet|food|vitamin|eating|supplement|protein|gut|obesity|weight|probiotic|microbiome|superfood|plant.?based/.test(text)) return "nutrition";
+            if (/mental|anxiety|depress|stress|therapy|psych|burnout|emotional|well.?being|self.?care|resilience|cognitive.?behav/.test(text)) return "mental";
+            if (/fitness|exercise|workout|muscle|cardio|running|gym|train|sport|physical activity|strength|hiit|pilates/.test(text)) return "fitness";
+            if (/longev|aging|anti.?age|lifespan|telomer|senolyti|centenarian|blue.?zone|healthspan/.test(text)) return "longevity";
+            
+            return "medical";
+        }
+
+        async function fetchNews() {
+            // Show loading
+            document.getElementById('loadingContainer').classList.remove('hidden');
+            document.getElementById('errorContainer').classList.add('hidden');
+            document.getElementById('articlesContainer').classList.add('hidden');
+            document.getElementById('refreshContainer').classList.add('hidden');
+            document.getElementById('categoryNav').classList.add('hidden');
+            document.getElementById('sourceTicker').classList.add('hidden');
+            document.getElementById('updateInfo').classList.add('hidden');
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const progressCount = document.getElementById('progressCount');
+            const currentSource = document.getElementById('currentSource');
+            
+            progressBar.classList.remove('hidden');
+            progressCount.classList.remove('hidden');
+            currentSource.classList.remove('hidden');
+            
+            const allArticles = [];
+            
+            try {
+                for (let i = 0; i < SEARCHES.length; i++) {
+                    const { query, label } = SEARCHES[i];
+                    
+                    currentSource.textContent = `Searching ${label}...`;
+                    progressFill.style.width = `${Math.round(((i + 1) / SEARCHES.length) * 100)}%`;
+                    progressCount.textContent = `${i + 1} of ${SEARCHES.length} sources`;
+                    
+                    try {
+                        const response = await fetch("https://api.anthropic.com/v1/messages", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                model: "claude-sonnet-4-20250514",
+                                max_tokens: 1000,
+                                tools: [{ type: "web_search_20250305", name: "web_search" }],
+                                messages: [{
+                                    role: "user",
+                                    content: `Search for: "${query}"
+
+From the search results, extract up to 3 of the MOST RECENT and noteworthy health & wellness articles. Strongly prefer results from these reputable sources: Harvard Medical School, Harvard Health Publishing, WHO, Mayo Clinic, NIH, The Lancet, Johns Hopkins Medicine, CDC, Nature Medicine, Stanford Medicine, Cleveland Clinic, Psychology Today, Sleep Foundation, Dermatology Times, WebMD, Healthline, Well+Good, Mindbodygreen, Wired, JAMA, BMJ, New England Journal of Medicine.
+
+Respond ONLY with a JSON array (no markdown, no backticks, no explanation):
+[{"title":"exact article title","summary":"2-3 sentence factual summary of the key finding or news","source":"exact publication name","url":"full article url","date":"publication date if found"}]
+
+If no results, return: []`
+                                }],
+                            }),
+                        });
+
+                        const data = await response.json();
+                        const text = data.content
+                            ?.map(item => item.type === "text" ? item.text : "")
+                            .filter(Boolean)
+                            .join("\n");
+
+                        if (text) {
+                            const cleaned = text.replace(/```json|```/g, "").trim();
+                            const match = cleaned.match(/\[[\s\S]*\]/);
+                            if (match) {
+                                try {
+                                    const parsed = JSON.parse(match[0]);
+                                    if (Array.isArray(parsed)) {
+                                        parsed.forEach(a => {
+                                            a.category = classifyArticle(a.title || "", a.summary || "");
+                                            allArticles.push(a);
+                                        });
+                                    }
+                                } catch (e) {
+                                    console.warn("Parse error:", e);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn("Search failed:", label, e);
+                    }
+                }
+
+                // Deduplicate
+                const unique = [];
+                const seen = new Set();
+                for (const a of allArticles) {
+                    const key = (a.title || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 50);
+                    if (!seen.has(key) && a.title) {
+                        seen.add(key);
+                        unique.push(a);
+                    }
+                }
+
+                // Sort: reputable sources first
+                unique.sort((a, b) => {
+                    const aRep = getSourceBadge(a.source) ? 1 : 0;
+                    const bRep = getSourceBadge(b.source) ? 1 : 0;
+                    return bRep - aRep;
+                });
+
+                if (unique.length === 0) {
+                    showError("No articles found. Please try again.");
+                } else {
+                    articles = unique;
+                    lastUpdated = new Date();
+                    renderArticles();
+                    renderCategories();
+                    renderSourceTicker();
+                    updateDateTime();
+                }
+            } catch (e) {
+                console.error(e);
+                showError("Failed to fetch news. Please try again.");
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loadingContainer').classList.add('hidden');
+            document.getElementById('errorContainer').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        function renderCategories() {
+            const nav = document.getElementById('categoryNav');
+            nav.innerHTML = '';
+            
+            CATEGORIES.forEach(cat => {
+                const count = cat.id === "all" ? articles.length : articles.filter(a => a.category === cat.id).length;
+                
+                if (cat.id !== "all" && count === 0) return;
+                
+                const btn = document.createElement('button');
+                btn.className = `category-btn ${activeCategory === cat.id ? 'active' : ''}`;
+                btn.innerHTML = `
+                    ${cat.icon} ${cat.label}
+                    <span class="category-count">${count}</span>
+                `;
+                btn.onclick = () => {
+                    activeCategory = cat.id;
+                    renderArticles();
+                    renderCategories();
+                };
+                nav.appendChild(btn);
+            });
+            
+            nav.classList.remove('hidden');
+        }
+
+        function renderSourceTicker() {
+            const ticker = document.getElementById('sourceTicker');
+            ticker.innerHTML = '';
+            
+            const usedSources = SOURCES.filter(s => 
+                articles.some(a => {
+                    const badge = getSourceBadge(a.source);
+                    return badge && badge.name === s.name;
+                })
+            );
+            
+            usedSources.forEach(s => {
+                const badge = document.createElement('span');
+                badge.className = 'source-badge';
+                badge.style.background = `${s.color}0A`;
+                badge.style.border = `1px solid ${s.color}18`;
+                badge.style.color = s.color;
+                badge.innerHTML = `
+                    <span class="source-badge-icon" style="background: ${s.color}18">${s.abbr.slice(0, 2)}</span>
+                    ${s.name}
+                `;
+                ticker.appendChild(badge);
+            });
+            
+            const reputableCount = articles.filter(a => getSourceBadge(a.source)).length;
+            document.getElementById('sourceCount').textContent = SOURCES.length;
+            
+            ticker.classList.remove('hidden');
+        }
+
+        function renderArticles() {
+            const container = document.getElementById('articlesContainer');
+            const filtered = activeCategory === "all" 
+                ? articles 
+                : articles.filter(a => a.category === activeCategory);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🍃</div>
+                        <p class="empty-text">No articles in this category yet</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '<div class="articles-grid"></div>';
+                const grid = container.querySelector('.articles-grid');
+                
+                filtered.forEach((article, i) => {
+                    const card = createArticleCard(article, i, i === 0 && activeCategory === "all");
+                    grid.appendChild(card);
+                });
+            }
+            
+            document.getElementById('loadingContainer').classList.add('hidden');
+            container.classList.remove('hidden');
+            document.getElementById('refreshContainer').classList.remove('hidden');
+        }
+
+        function createArticleCard(article, index, featured) {
+            const cat = CATEGORIES.find(c => c.id === article.category) || CATEGORIES[0];
+            const badge = getSourceBadge(article.source);
+            const isReputable = !!badge;
+            const accentColor = CAT_COLORS[article.category] || "#2d6a4f";
+            
+            const card = document.createElement('a');
+            card.href = article.url || "#";
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+            card.className = `article-card ${featured ? 'featured' : ''}`;
+            card.style.animationDelay = `${Math.min(index * 0.05, 0.8)}s`;
+            
+            let accentGradient = '';
+            if (isReputable) {
+                accentGradient = `<div class="article-top-accent" style="background: linear-gradient(90deg, ${badge.color}, ${badge.color}88, transparent);"></div>`;
+            } else {
+                accentGradient = `<div class="article-top-accent" style="background: linear-gradient(90deg, ${accentColor}66, ${accentColor}22, transparent);"></div>`;
+            }
+            
+            const featuredBadge = featured ? '<div class="featured-badge">⭐ Top Story</div>' : '';
+            
+            const verifiedBadge = isReputable ? `
+                <span class="verified-badge" style="background: ${badge.color}0D; color: ${badge.color};">
+                    ✓ Verified Source
+                </span>
+            ` : '';
+            
+            const dateBadge = article.date ? `<span class="article-date">${article.date}</span>` : '';
+            
+            const sourceDisplay = article.source ? (badge ? `
+                <div class="article-source" style="color: ${badge.color};">
+                    <span class="source-icon" style="background: ${badge.color}14; color: ${badge.color};">${badge.abbr}</span>
+                    ${article.source}
+                </div>
+            ` : `
+                <div class="article-source" style="color: #74796d; font-weight: 500;">
+                    <span style="width: 4px; height: 4px; border-radius: 50%; background: #95d5b2; display: inline-block;"></span>
+                    ${article.source}
+                </div>
+            `) : '';
+            
+            card.innerHTML = `
+                ${accentGradient}
+                ${featuredBadge}
+                <div class="article-meta">
+                    <span class="category-tag" style="background: ${accentColor}0D; color: ${accentColor};">
+                        ${cat.icon} ${cat.label}
+                    </span>
+                    ${verifiedBadge}
+                    ${dateBadge}
+                </div>
+                <h3 class="article-title">${article.title}</h3>
+                <p class="article-summary">${article.summary}</p>
+                ${sourceDisplay}
+            `;
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = badge ? badge.color : accentColor;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = featured ? '#52b788' : (isReputable ? '#d8e8df' : '#e8ece9');
+            });
+            
+            return card;
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            });
+            document.getElementById('dateInfo').textContent = dateStr;
+            
+            if (lastUpdated) {
+                const timeStr = lastUpdated.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+                const reputableCount = articles.filter(a => getSourceBadge(a.source)).length;
+                document.getElementById('updateInfo').textContent = 
+                    `Updated ${timeStr} · ${articles.length} articles from ${reputableCount} verified sources`;
+                document.getElementById('updateInfo').classList.remove('hidden');
+            }
+        }
+
+        // Start fetching news on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            fetchNews();
+        });
+    </script>
+</body>
+</html>
